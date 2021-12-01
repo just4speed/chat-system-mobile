@@ -8,12 +8,12 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import TimeAgo from 'react-timeago';
 
-const userData = {
-    _id: "619e27634c90d133d75c75bc",
-    name: "Eren",
-    profilePicture: "https://static.wikia.nocookie.net/villains/images/4/4c/Eren_meets_Yeagerists.png/revision/latest?cb=20210302172340",
-    blocked: []
-}
+// const userData = {
+//     _id: "619e27634c90d133d75c75bc",
+//     name: "Eren",
+//     profilePicture: "https://static.wikia.nocookie.net/villains/images/4/4c/Eren_meets_Yeagerists.png/revision/latest?cb=20210302172340",
+//     blocked: []
+// }
 
 const ConversationCard = ({
     item, opponent, isMyMessageLast, openDialog
@@ -54,6 +54,7 @@ const ConversationsList = ({ navigation }) => {
     const [conversationsLoaded, setConversationsLoaded] = React.useState(true);
     const isFocused = useIsFocused();
     const [refreshing, setRefreshing] = React.useState(false);
+    const [userData, setUserData] = React.useState(null);
 
     React.useEffect(() => {
         socketRef.current = io("http://192.168.0.105:5000");
@@ -100,8 +101,7 @@ const ConversationsList = ({ navigation }) => {
 
     const openDialog = conversationId => {
         navigation.navigate("Conversation", {
-            conversationId: conversationId,
-            // userId: "61a75a3a5e1d83c28d74a80e"
+            conversationId: conversationId
         });
     }
 
@@ -117,9 +117,9 @@ const ConversationsList = ({ navigation }) => {
                 }
             >
                 <View>
-                    { conversations.map((item, index) => {
-                        const opponent = item.members.find(m => m._id !== userData._id);
-                        const isMyMessageLast = item.messages[item.messages.length - 1].sender === userData._id;
+                    { userData !== null && conversations.map((item, index) => {
+                        const opponent = item.members.find(m => m._id !== userData?._id);
+                        const isMyMessageLast = item.messages[item.messages.length - 1].sender === userData?._id;
                         return(
                             <ConversationCard
                                 key={index}
