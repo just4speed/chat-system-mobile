@@ -12,13 +12,12 @@ import { faPaperPlane, faPaperclip, faCommentDots, faUserSlash, faUserCheck } fr
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import * as DocumentPicker from 'expo-document-picker';
 
-
-const userData = {
-    _id: "619e27634c90d133d75c75bc",
-    name: "Eren",
-    profilePicture: "https://static.wikia.nocookie.net/villains/images/4/4c/Eren_meets_Yeagerists.png/revision/latest?cb=20210302172340",
-    blocked: []
-}
+// const userData = {
+//     _id: "619e27634c90d133d75c75bc",
+//     name: "Eren",
+//     profilePicture: "https://static.wikia.nocookie.net/villains/images/4/4c/Eren_meets_Yeagerists.png/revision/latest?cb=20210302172340",
+//     blocked: []
+// }
 
 const Message = ({ isMessageMine, item, author }) => {
     const openAttachment = async (url) => {
@@ -85,6 +84,7 @@ const Conversation = ({ navigation, route }) => {
     const [newConversation, setNewConversation] = React.useState(false);
     const [newConversationError, setNewConversationError] = React.useState(false);
     const [newConversationUser, setNewConversationUser] = React.useState(null);
+    const [userData, setUserData] = React.useState(null);
 
     React.useEffect(async () => {
         socketRef.current = io("http://192.168.0.105:5000");
@@ -156,7 +156,7 @@ const Conversation = ({ navigation, route }) => {
         setMessage(value);
         socketRef.current.emit("User typing [server]", {
             conversationId,
-            userId: userData._id
+            userId: userData?._id
         });
     }
 
@@ -212,7 +212,7 @@ const Conversation = ({ navigation, route }) => {
             uid = opponent?._id;
         }
         axios.post("http://192.168.0.105:5000/user/block", {
-            isBlocking: userData._id,
+            isBlocking: userData?._id,
             toBlock: uid
         }).then(result => {
             if(result?.status === 200){
